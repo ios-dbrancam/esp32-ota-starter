@@ -7,7 +7,7 @@
 void setup() {
   Serial.begin(115200);
   setupNetwork(networkSsid, networkPwd, localIp, gateway, subnet, dns, hostname);
-  setupOta(otaHost, otaPwd);
+  setupOta(hostname, otaPassword);
 }
 
 void loop() {

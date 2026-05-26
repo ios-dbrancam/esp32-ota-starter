@@ -27,4 +27,4 @@ IPAddress subnet (255, 255, 255, 0);
 IPAddress dns(8, 8, 8, 8);
 
 // mDNS
-const char* hostname = "deskLights";
+const char* hostname = "deskLightsController";
