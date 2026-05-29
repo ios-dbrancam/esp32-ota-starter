@@ -21,7 +21,7 @@ class DeskLight {
         Button upButton_;
         Button downButton_;
         PwmConfig pwmConfig_;
-        uint32_t brightnessLevel_;
+        uint8_t brightnessStep_;
 
         void setBrightness();
         void increaseBrightness();

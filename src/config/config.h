@@ -15,9 +15,10 @@ const uint8_t rightPwmPin = 9;
 // PWM Values
 const uint16_t pwmFrequency = 5000;  // 5kHz
 const uint8_t pwmResolution = 12;    // 0 ... 4096
-const uint8_t minPwm = 0;
-const uint16_t maxPwm = 4095;
-const uint16_t stepPwm = 512;         // 8 Steps
+const uint8_t pwmMin = 0;
+const uint16_t pwmMax = 4095;
+const uint8_t pwmSteps = 8;
+const float ledGamma = 2.2f;
 
 // Button times
 const unsigned long debounceTime = 100;

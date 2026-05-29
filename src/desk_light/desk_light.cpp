@@ -11,7 +11,7 @@ DeskLight::DeskLight(uint8_t pwmPin,
       upButton_(upButtonPin, debounceTime, longPressTime),
       downButton_(downButtonPin, debounceTime, longPressTime),
       pwmConfig_(pwmConfig),
-      brightnessLevel_(0) {}
+      brightnessStep_(0) {}
 
 void DeskLight::initialize() {
     ledcAttach(pwmPin_, pwmConfig_.frequency, pwmConfig_.resolution);
@@ -44,25 +44,30 @@ void DeskLight::update() {
 }
 
 void DeskLight::setBrightness() {
-    ledcWrite(pwmPin_, brightnessLevel_);
+    // Gamma correction (Logarithmic)
+    // OUT = (IN / MaxIN)^Gamma * MaxOUT
+    float normalized = (float)brightnessStep_ / (float)pwmConfig_.steps;
+    float corrected = pow(normalized, pwmConfig_.gamma);
+    uint32_t brightnessLevel = (uint32_t)(corrected * pwmConfig_.upperLimit);
+    ledcWrite(pwmPin_, brightnessLevel);
 }
 
 void DeskLight::increaseBrightness() {
-    brightnessLevel_ = min<int>(brightnessLevel_ + pwmConfig_.step, pwmConfig_.upperLimit);
+    brightnessStep_ = min<int>(brightnessStep_ + 1, pwmConfig_.steps);
     setBrightness();
 }
 
 void DeskLight::decreaseBrightness() {
-    brightnessLevel_ = max<int>(brightnessLevel_ - pwmConfig_.step, pwmConfig_.lowerLimit);
+    brightnessStep_ = max<int>(brightnessStep_ - 1, 0);
     setBrightness();
 }
 
 void DeskLight::setMaxBrightness() {
-    brightnessLevel_ = pwmConfig_.upperLimit;
+    brightnessStep_ = pwmConfig_.steps;
     setBrightness();
 }
 
 void DeskLight::setMinBrightness() {
-    brightnessLevel_ = pwmConfig_.lowerLimit;
+    brightnessStep_ = 0;
     setBrightness();
 }

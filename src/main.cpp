@@ -9,9 +9,10 @@
 const PwmConfig pwmConfig = {
   .frequency = pwmFrequency,
   .resolution = pwmResolution,
-  .lowerLimit = minPwm,
-  .upperLimit = maxPwm,
-  .step = stepPwm,
+  .lowerLimit = pwmMin,
+  .upperLimit = pwmMax,
+  .steps = pwmSteps,
+  .gamma = ledGamma,
 };
 
 DeskLight leftLight(leftPwmPin, leftBrightnessUp, leftBrightnessDown, pwmConfig, debounceTime, longPressTime);
