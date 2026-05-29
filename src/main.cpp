@@ -14,8 +14,8 @@ const PwmConfig pwmConfig = {
   .step = stepPwm,
 };
 
-DeskLight leftLight(leftPwmPin, leftBrightnessUp, leftBrightnessDown, pwmConfig, debounceTime);
-DeskLight rightLight(rightPwmPin, rightBrightnessUp, rightBrightnessDown, pwmConfig, debounceTime);
+DeskLight leftLight(leftPwmPin, leftBrightnessUp, leftBrightnessDown, pwmConfig, debounceTime, longPressTime);
+DeskLight rightLight(rightPwmPin, rightBrightnessUp, rightBrightnessDown, pwmConfig, debounceTime, longPressTime);
 
 void setup() {
   Serial.begin(115200);

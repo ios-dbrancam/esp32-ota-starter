@@ -13,14 +13,15 @@ const uint8_t leftPwmPin = 10;
 const uint8_t rightPwmPin = 9;
 
 // PWM Values
-const uint32_t pwmFrequency = 5000;  // 5kHz
+const uint16_t pwmFrequency = 5000;  // 5kHz
 const uint8_t pwmResolution = 12;    // 0 ... 4096
 const uint8_t minPwm = 0;
 const uint16_t maxPwm = 4095;
-const uint8_t stepPwm = 128;         // 32 Steps
+const uint16_t stepPwm = 512;         // 8 Steps
 
-// Debounce
-const uint8_t debounceTime = 100;
+// Button times
+const unsigned long debounceTime = 100;
+const unsigned long longPressTime = 1000;
 
 // Static IP
 const IPAddress localIp(192, 168, 0, 244);

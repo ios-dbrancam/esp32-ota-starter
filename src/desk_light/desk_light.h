@@ -10,7 +10,8 @@ class DeskLight {
             uint8_t upButtonPin,
             uint8_t downButtonPin,
             const PwmConfig pwmConfig,
-            uint16_t debounceTime);
+            unsigned long debounceTime,
+            unsigned long longPressTime);
 
         void initialize();
         void update();
@@ -20,10 +21,11 @@ class DeskLight {
         Button upButton_;
         Button downButton_;
         PwmConfig pwmConfig_;
-        uint16_t debounceTime_;
-        uint16_t brightnessLevel_;
+        uint32_t brightnessLevel_;
 
         void setBrightness();
         void increaseBrightness();
         void decreaseBrightness();
+        void setMaxBrightness();
+        void setMinBrightness();
 };
