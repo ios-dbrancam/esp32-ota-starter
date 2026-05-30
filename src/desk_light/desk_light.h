@@ -22,8 +22,14 @@ class DeskLight {
         Button downButton_;
         PwmConfig pwmConfig_;
         uint8_t brightnessStep_;
+        uint32_t currentPwm_;
+        uint32_t initialPwm_;
+        uint32_t targetPwm_;
+        unsigned long fadeStartTime_;
+        unsigned long fadeDuration_;
 
         void setBrightness();
+        void processFade(unsigned long now);
         void increaseBrightness();
         void decreaseBrightness();
         void setMaxBrightness();

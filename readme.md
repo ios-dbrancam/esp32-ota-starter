@@ -36,6 +36,8 @@ Plug the board in over USB and upload:
 Once OTA is running on the device, **uncomment** the three lines you commented out before:
 Make sure `upload_port` matches your hostname and `--auth` matches your `otaPassword`. ## Using this as a base for new projects
 ## Requirements
-- [PlatformIO](https://platformio.org/) (the project doesn't use the Arduino IDE)
+- [PlatformIO](https://platformio.org/)
 - An ESP32 board — default target is the Seeed XIAO ESP32-C3, but any ESP32 variant works by changing `board` in `platformio.ini`
 - A 2.4 GHz WiFi network the device can join
+## Example
+Check out the `lightsTest` branch to see the starter in action — a two-channel desk light controller with physical buttons, gamma-corrected dimming, long-press shortcuts, and smooth eased fades. It adds three new modules (`button/`, `desk_light/`, and `config/pwm_config.h`) on top of this base while leaving `network/` and `ota/` untouched, so it doubles as a worked example of how to extend the starter without disturbing what's already there.
