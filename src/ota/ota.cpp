@@ -1,6 +1,6 @@
 #include <ArduinoOTA.h>
 #include <WiFi.h>
-#include "ota.h"
+#include "ota/ota.h"
 
 void setupOta(const char *hostname, const char *password) {
     ArduinoOTA.setHostname(hostname);
