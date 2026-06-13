@@ -14,9 +14,11 @@ src/
 │   ├── secrets.h.template     # Credential template (rename and fill in)
 │   └── secrets.h              # Real credentials (git-ignored)
 ├── network/
+│   ├── network_config.h
 │   ├── network.h
 │   └── network.cpp            # WiFi, static IP, mDNS, reconnect
 ├── ota/
+│   ├── ota_config.h
 │   ├── ota.h
 │   └── ota.cpp                # OTA update handler
 └── main.cpp
@@ -32,7 +34,7 @@ Edit `src/config/config.h`:
 The very first flash **must be done via USB**, because OTA can't update a device that doesn't have OTA running on it yet.
 Open `platformio.ini` and make sure the OTA upload lines are **commented out**:
 Plug the board in over USB and upload:
-### 4. Subsequent flashes — over the air
+### 4. Subsequent flashes — Over The Air
 Once OTA is running on the device, **uncomment** the three lines you commented out before:
 Make sure `upload_port` matches your hostname and `--auth` matches your `otaPassword`. ## Using this as a base for new projects
 ## Requirements
@@ -40,4 +42,4 @@ Make sure `upload_port` matches your hostname and `--auth` matches your `otaPass
 - An ESP32 board — default target is the Seeed XIAO ESP32-C3, but any ESP32 variant works by changing `board` in `platformio.ini`
 - A 2.4 GHz WiFi network the device can join
 ## Example
-Check out the `lightsTest` branch to see the starter in action — a two-channel desk light controller with physical buttons, gamma-corrected dimming, long-press shortcuts, and smooth eased fades. It adds three new modules (`button/`, `desk_light/`, and `config/pwm_config.h`) on top of this base while leaving `network/` and `ota/` untouched, so it doubles as a worked example of how to extend the starter without disturbing what's already there.
+This repo includes an example: a two-channel desk light controller with physical buttons, gamma-corrected dimming, long-press shortcuts, and smooth eased fades. It adds three new modules (`button/`, `desk_light/`, and `config/pwm_config.h`) on top of this base while leaving `network/` and `ota/` untouched, so it doubles as a worked example of how to extend the starter without disturbing what's already there.

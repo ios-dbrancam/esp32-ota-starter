@@ -1,14 +1,19 @@
 #pragma once
-#include <IPAddress.h>
 
-void setupNetwork(
-    const char* ssid,
-    const char* password,
-    IPAddress localIp = IPAddress(),
-    IPAddress gateway = IPAddress(),
-    IPAddress subnet = IPAddress(),
-    IPAddress dns = IPAddress(),
-    const char* hostname = nullptr
-);
+#include "network/network_config.h"
 
-void ensureNetwork();
+class Network {
+    public:
+        explicit Network(const NetworkConfig& config);
+        void initialize();
+        void update();
+    
+    private:
+        NetworkConfig _config;
+        unsigned long _lastAttempt = 0;
+        static const unsigned long _retryInterval = 30 * 1000;
+        bool _dnsConfigured = false;
+
+        void configureStaticIp();
+        void configureDns();
+};

@@ -1,65 +1,64 @@
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include "network/network.h"
+#include "network/network_config.h"
 
-static void configStaticIp(
-        IPAddress localIp,
-        IPAddress gateway,
-        IPAddress subnet,
-        IPAddress dns
-    ) {
-    WiFi.config(localIp, gateway, subnet, dns);
-}
+Network::Network(const NetworkConfig& config) : _config(config) {}
 
-static void configDns(const char* hostname) {
-    if (MDNS.begin(hostname)) {
-        Serial.println("mDNS started - http://" + String(hostname) + ".local");
-    } else {
-        Serial.println("mDNS failed to start");
-    }
-}
-
-void setupNetwork(
-        const char* ssid,
-        const char* password,
-        IPAddress localIp,
-        IPAddress gateway,
-        IPAddress subnet,
-        IPAddress dns,
-        const char* hostname
-    ) {
-
+void Network::initialize() {
     WiFi.mode(WIFI_STA);
     WiFi.setAutoReconnect(true);
 
-    if ((localIp != IPAddress()) && (gateway != IPAddress()) && (subnet != IPAddress()) && (dns != IPAddress())) {
-        configStaticIp(localIp, gateway, subnet, dns);
+    if ((_config.localIp != IPAddress()) && (_config.gateway != IPAddress()) && (_config.subnet != IPAddress()) && (_config.dns != IPAddress())) {
+        configureStaticIp();
     }
 
-    WiFi.begin(ssid, password);
+    WiFi.begin(_config.ssid, _config.password);
     Serial.println("Connecting to WiFi");
+
+    unsigned long startAttemp = millis();
     while(WiFi.status() != WL_CONNECTED) {
+        if (millis() - startAttemp > _config.connectTimeout) {
+            Serial.println("WiFi connection timed out, continuing without network");
+            return;
+        }
         delay(500);
         Serial.print(".");
     }
     Serial.println("\nConnected\nIP: " + WiFi.localIP().toString());
     Serial.println("MAC: " + WiFi.macAddress());
 
-    if (hostname != nullptr) {
-        configDns(hostname);
+    if (_config.hostname != nullptr) {
+        configureDns();
     }
 }
 
-void ensureNetwork() {
-    static unsigned long lastAttempt = 0;
-    const unsigned long retryInterval = 30000;
-
-    if (WiFi.status() == WL_CONNECTED) return;
+void Network::update() {
+    if (WiFi.status() == WL_CONNECTED) {
+        if (!_dnsConfigured && _config.hostname != nullptr) {
+            configureDns();
+        }
+        return;
+    }
 
     unsigned long now = millis();
-    if (now - lastAttempt >= retryInterval) {
-        lastAttempt = now;
+    if (now - _lastAttempt >= _retryInterval) {
+        _lastAttempt = now;
         Serial.println("WiFi lost, reconnecting...");
         WiFi.reconnect();
+        _dnsConfigured = false;
+    }
+}
+
+void Network::configureStaticIp() {
+    WiFi.config(_config.localIp, _config.gateway, _config.subnet, _config.dns);
+}
+
+void Network::configureDns() {
+    if (MDNS.begin(_config.hostname)) {
+        Serial.println("mDNS started - http://" + String(_config.hostname) + ".local");
+        _dnsConfigured = true;
+    } else {
+        Serial.println("mDNS failed to start");
     }
 }

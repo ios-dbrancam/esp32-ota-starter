@@ -17,12 +17,12 @@ const uint16_t pwmFrequency = 5000;  // 5kHz
 const uint8_t pwmResolution = 12;    // 0 ... 4096
 const uint8_t pwmMin = 0;
 const uint16_t pwmMax = 4095;
-const uint8_t pwmSteps = 8;
+const uint8_t pwmSteps = 6;
 const float ledGamma = 2.2f;
 
 // Button times
-const unsigned long debounceTime = 100;
-const unsigned long longPressTime = 1000;
+const unsigned long debounceTime = 40;
+const unsigned long longPressTime = 600;
 
 // Static IP
 const IPAddress localIp(192, 168, 0, 244);

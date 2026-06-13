@@ -1,5 +1,13 @@
 #pragma once
 
-void setupOta(const char* hostname, const char* password);
+#include "ota/ota_config.h"
 
-void handleOta();
+class Ota {
+    public:
+        explicit Ota(const OtaConfig& config);
+        void initialize();
+        void update();
+    
+    private:
+        OtaConfig _config;
+};

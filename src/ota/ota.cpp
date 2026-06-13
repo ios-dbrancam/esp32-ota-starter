@@ -1,10 +1,13 @@
 #include <ArduinoOTA.h>
 #include <WiFi.h>
 #include "ota/ota.h"
+#include "ota/ota_config.h"
 
-void setupOta(const char *hostname, const char *password) {
-    ArduinoOTA.setHostname(hostname);
-    ArduinoOTA.setPassword(password);
+Ota::Ota(const OtaConfig& config) : _config(config) {}
+
+void Ota::initialize() {
+    ArduinoOTA.setHostname(_config.hostname);
+    ArduinoOTA.setPassword(_config.password);
 
     ArduinoOTA.onStart([]() {
         Serial.println("OTA update starting...");
@@ -15,7 +18,7 @@ void setupOta(const char *hostname, const char *password) {
     });
 
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-        Serial.printf("OTA progress: %u%%\n", (progress / (total / 100)));
+        Serial.printf("OTA progress: %u%%\n", (progress * 100) / total );
     });
 
     ArduinoOTA.onError([](ota_error_t error) {
@@ -43,6 +46,6 @@ void setupOta(const char *hostname, const char *password) {
     Serial.println("OTA ready");
 }
 
-void handleOta() {
+void Ota::update() {
     ArduinoOTA.handle();
 }
