@@ -3,6 +3,7 @@
 #include "config/pwm_config.h"
 #include "config/secrets.h"
 #include "desk_light/desk_light.h"
+#include "logger/logger.h"
 #include "network/network.h"
 #include "network/network_config.h"
 #include "ota/ota.h"
@@ -34,12 +35,13 @@ const PwmConfig pwmConfig = {
 Network network(networkConfig);
 Ota ota(otaConfig);
 
-DeskLight leftLight(leftPwmPin, leftBrightnessUp, leftBrightnessDown, pwmConfig, debounceTime, longPressTime);
-DeskLight rightLight(rightPwmPin, rightBrightnessUp, rightBrightnessDown, pwmConfig, debounceTime, longPressTime);
+DeskLight leftLight("LEFT", leftPwmPin, leftBrightnessUp, leftBrightnessDown, pwmConfig, debounceTime, longPressTime);
+DeskLight rightLight("RIGHT", rightPwmPin, rightBrightnessUp, rightBrightnessDown, pwmConfig, debounceTime, longPressTime);
 
 void setup() {
   Serial.begin(115200);
   network.initialize();
+  logger.initialize();
   ota.initialize();
   leftLight.initialize();
   rightLight.initialize();
@@ -47,6 +49,7 @@ void setup() {
 
 void loop() {
   network.update();
+  logger.update();
   ota.update();
   leftLight.update();
   rightLight.update();

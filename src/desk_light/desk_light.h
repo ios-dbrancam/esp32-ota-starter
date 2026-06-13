@@ -1,11 +1,12 @@
 #pragma once
-#include <Arduino.h>
+#include <stdint.h>
 #include "button/button.h"
 #include "config/pwm_config.h"
 
 class DeskLight {
     public:
         DeskLight(
+            const char* name,
             uint8_t pwmPin,
             uint8_t upButtonPin,
             uint8_t downButtonPin,
@@ -17,6 +18,7 @@ class DeskLight {
         void update();
 
     private:
+        const char* name_;
         uint8_t pwmPin_;
         Button upButton_;
         Button downButton_;

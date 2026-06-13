@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 // Left Brightness
 const uint8_t leftBrightnessUp = 2;
 const uint8_t leftBrightnessDown = 3;

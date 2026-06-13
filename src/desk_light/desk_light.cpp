@@ -1,13 +1,16 @@
-#include "desk_light/desk_light.h"
 #include "config/pwm_config.h"
+#include "desk_light/desk_light.h"
+#include "logger/logger.h"
 
-DeskLight::DeskLight(uint8_t pwmPin,
+DeskLight::DeskLight(const char* name,
+                     uint8_t pwmPin,
                      uint8_t upButtonPin,
                      uint8_t downButtonPin,
                      PwmConfig pwmConfig,
                      unsigned long debounceTime,
                      unsigned long longPressTime)
-    : pwmPin_(pwmPin),
+    : name_(name),
+      pwmPin_(pwmPin),
       upButton_(upButtonPin, debounceTime, longPressTime),
       downButton_(downButtonPin, debounceTime, longPressTime),
       pwmConfig_(pwmConfig),
@@ -80,19 +83,23 @@ void DeskLight::processFade(unsigned long now) {
 void DeskLight::increaseBrightness() {
     brightnessStep_ = min<int>(brightnessStep_ + 1, pwmConfig_.steps);
     setBrightness();
+    logger.log("Desk light ID: " + String(name_) + " increased to " + String(brightnessStep_));
 }
 
 void DeskLight::decreaseBrightness() {
     brightnessStep_ = max<int>(brightnessStep_ - 1, 0);
     setBrightness();
+    logger.log("Desk light ID: " + String(name_) + " decreased to " + String(brightnessStep_));
 }
 
 void DeskLight::setMaxBrightness() {
     brightnessStep_ = pwmConfig_.steps;
     setBrightness();
+    logger.log("Desk light ID: " + String(name_) + " set to " + String(brightnessStep_));
 }
 
 void DeskLight::setMinBrightness() {
     brightnessStep_ = 0;
     setBrightness();
+    logger.log("Desk light ID: " + String(name_) + " set to " + String(brightnessStep_));
 }

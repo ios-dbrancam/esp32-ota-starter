@@ -1,9 +1,10 @@
 # ESP32 OTA Starter
-A starter template for ESP32 projects with WiFi, OTA updates, and mDNS preconfigured. Clone it, fill in your credentials, and start building — your firmware will be updateable over the air from the first commit.
+A starter template for ESP32 projects with WiFi, OTA updates, Telnet logs and mDNS preconfigured. Clone it, fill in your credentials, and start building — your firmware will be updateable over the air from the first commit.
 ## What's included
 - **WiFi connection management** with static IP support and automatic reconnection
 - **OTA (over-the-air) firmware updates** via ArduinoOTA
 - **mDNS** so the device is reachable by hostname (e.g. `myproject.local`)
+- **Remote logging over WiFi** via a lightweight telnet server, so you can read logs without a USB cable (mirrors to Serial too)
 - **Modular project structure** ready to extend
 - **Secrets handling** that keeps credentials out of git
 ## Project structure
@@ -21,6 +22,10 @@ src/
 │   ├── ota_config.h
 │   ├── ota.h
 │   └── ota.cpp                # OTA update handler
+├── logger/
+│   ├── logger_config.h
+│   ├── logger.h
+│   └── logger.cpp             # Telnet log server, Serial mirror
 └── main.cpp
 ```
 ## First-time setup
@@ -37,6 +42,12 @@ Plug the board in over USB and upload:
 ### 4. Subsequent flashes — Over The Air
 Once OTA is running on the device, **uncomment** the three lines you commented out before:
 Make sure `upload_port` matches your hostname and `--auth` matches your `otaPassword`. ## Using this as a base for new projects
+## Viewing logs over WiFi
+The device runs a small telnet server so you can read logs remotely — handy once the board is mounted somewhere without easy USB access. Logs are also mirrored to Serial, so the USB monitor keeps working as usual.
+Once the device is on your network, connect to it on port 23 using its IP address or hostname:
+```
+> nc <IP> 23
+```
 ## Requirements
 - [PlatformIO](https://platformio.org/)
 - An ESP32 board — default target is the Seeed XIAO ESP32-C3, but any ESP32 variant works by changing `board` in `platformio.ini`

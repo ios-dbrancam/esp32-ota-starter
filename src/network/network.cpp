@@ -2,6 +2,7 @@
 #include <ESPmDNS.h>
 #include "network/network.h"
 #include "network/network_config.h"
+#include "logger/logger.h"
 
 Network::Network(const NetworkConfig& config) : _config(config) {}
 
@@ -25,8 +26,8 @@ void Network::initialize() {
         delay(500);
         Serial.print(".");
     }
-    Serial.println("\nConnected\nIP: " + WiFi.localIP().toString());
-    Serial.println("MAC: " + WiFi.macAddress());
+    logger.log("\nConnected\nIP: " + WiFi.localIP().toString());
+    logger.log("MAC: " + WiFi.macAddress());
 
     if (_config.hostname != nullptr) {
         configureDns();
@@ -56,9 +57,9 @@ void Network::configureStaticIp() {
 
 void Network::configureDns() {
     if (MDNS.begin(_config.hostname)) {
-        Serial.println("mDNS started - http://" + String(_config.hostname) + ".local");
+        logger.log("mDNS started - http://" + String(_config.hostname) + ".local");
         _dnsConfigured = true;
     } else {
-        Serial.println("mDNS failed to start");
+        logger.log("mDNS failed to start");
     }
 }
