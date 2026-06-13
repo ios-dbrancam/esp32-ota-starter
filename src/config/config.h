@@ -34,3 +34,6 @@ const IPAddress dns(8, 8, 8, 8);
 
 // mDNS
 const char* const hostname = "deskLightsController";
+
+// MQTT
+const char* const mqttRoot = "home/office/desk/light";

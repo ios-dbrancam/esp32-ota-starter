@@ -2,9 +2,9 @@
 
 #include "network/network_config.h"
 
-class Network {
+class NetworkController {
     public:
-        explicit Network(const NetworkConfig& config);
+        explicit NetworkController(const NetworkConfig& config);
         void initialize();
         void update();
     

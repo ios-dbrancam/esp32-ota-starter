@@ -6,8 +6,8 @@
 class DeskLight {
     public:
         DeskLight(
-            const char* name,
             uint8_t pwmPin,
+            const char* id,
             uint8_t upButtonPin,
             uint8_t downButtonPin,
             const PwmConfig pwmConfig,
@@ -17,9 +17,13 @@ class DeskLight {
         void initialize();
         void update();
 
+        void setBrightnessStep(int step);
+        bool isOn() const;
+        const char* getId() const;
+
     private:
-        const char* name_;
         uint8_t pwmPin_;
+        const char* id_;
         Button upButton_;
         Button downButton_;
         PwmConfig pwmConfig_;

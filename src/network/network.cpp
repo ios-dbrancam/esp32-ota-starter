@@ -4,9 +4,9 @@
 #include "network/network_config.h"
 #include "logger/logger.h"
 
-Network::Network(const NetworkConfig& config) : _config(config) {}
+NetworkController::NetworkController(const NetworkConfig& config) : _config(config) {}
 
-void Network::initialize() {
+void NetworkController::initialize() {
     WiFi.mode(WIFI_STA);
     WiFi.setAutoReconnect(true);
 
@@ -34,7 +34,7 @@ void Network::initialize() {
     }
 }
 
-void Network::update() {
+void NetworkController::update() {
     if (WiFi.status() == WL_CONNECTED) {
         if (!_dnsConfigured && _config.hostname != nullptr) {
             configureDns();
@@ -51,11 +51,11 @@ void Network::update() {
     }
 }
 
-void Network::configureStaticIp() {
+void NetworkController::configureStaticIp() {
     WiFi.config(_config.localIp, _config.gateway, _config.subnet, _config.dns);
 }
 
-void Network::configureDns() {
+void NetworkController::configureDns() {
     if (MDNS.begin(_config.hostname)) {
         logger.log("mDNS started - http://" + String(_config.hostname) + ".local");
         _dnsConfigured = true;

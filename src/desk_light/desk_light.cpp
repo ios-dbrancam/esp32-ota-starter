@@ -2,15 +2,15 @@
 #include "desk_light/desk_light.h"
 #include "logger/logger.h"
 
-DeskLight::DeskLight(const char* name,
-                     uint8_t pwmPin,
+DeskLight::DeskLight(uint8_t pwmPin,
+                     const char* id,
                      uint8_t upButtonPin,
                      uint8_t downButtonPin,
                      PwmConfig pwmConfig,
                      unsigned long debounceTime,
                      unsigned long longPressTime)
-    : name_(name),
-      pwmPin_(pwmPin),
+    : pwmPin_(pwmPin),
+      id_(id),
       upButton_(upButtonPin, debounceTime, longPressTime),
       downButton_(downButtonPin, debounceTime, longPressTime),
       pwmConfig_(pwmConfig),
@@ -53,6 +53,19 @@ void DeskLight::update() {
     processFade(now);
 }
 
+void DeskLight::setBrightnessStep(int step) {
+    brightnessStep_ = min<int>(max<int>(step, 0), pwmConfig_.steps);
+    setBrightness();
+}
+
+bool DeskLight::isOn() const {
+    return brightnessStep_ > 0;
+}
+
+const char* DeskLight::getId() const {
+    return id_;
+}
+
 void DeskLight::setBrightness() {
     // Gamma correction (Logarithmic)
     // OUT = (IN / MaxIN)^Gamma * MaxOUT
@@ -81,25 +94,21 @@ void DeskLight::processFade(unsigned long now) {
 }
 
 void DeskLight::increaseBrightness() {
-    brightnessStep_ = min<int>(brightnessStep_ + 1, pwmConfig_.steps);
-    setBrightness();
-    logger.log("Desk light ID: " + String(name_) + " increased to " + String(brightnessStep_));
+    setBrightnessStep(brightnessStep_ + 1);
+    logger.log("Desk light ID: " + String(id_) + " increased to " + String(brightnessStep_));
 }
 
 void DeskLight::decreaseBrightness() {
-    brightnessStep_ = max<int>(brightnessStep_ - 1, 0);
-    setBrightness();
-    logger.log("Desk light ID: " + String(name_) + " decreased to " + String(brightnessStep_));
+    setBrightnessStep(brightnessStep_ - 1);
+    logger.log("Desk light ID: " + String(id_) + " decreased to " + String(brightnessStep_));
 }
 
 void DeskLight::setMaxBrightness() {
-    brightnessStep_ = pwmConfig_.steps;
-    setBrightness();
-    logger.log("Desk light ID: " + String(name_) + " set to " + String(brightnessStep_));
+    setBrightnessStep(pwmConfig_.steps);
+    logger.log("Desk light ID: " + String(id_) + " set to " + String(brightnessStep_));
 }
 
 void DeskLight::setMinBrightness() {
-    brightnessStep_ = 0;
-    setBrightness();
-    logger.log("Desk light ID: " + String(name_) + " set to " + String(brightnessStep_));
+    setBrightnessStep(0);
+    logger.log("Desk light ID: " + String(id_) + " set to " + String(brightnessStep_));
 }
