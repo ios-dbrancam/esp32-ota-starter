@@ -32,5 +32,6 @@ class Mqtt {
         void handleMessage(char* topic, byte* payload, unsigned int length);
 
         bool connect();
+        void publishDiscovery(uint8_t index);
         void publishState(uint8_t index, bool on);
 };

@@ -63,7 +63,8 @@ const MqttConfig mqttConfig = {
   .clientId = mqttClientId,
   .username = mqttUsername,
   .password = mqttPassword,
-  .topicRoot = mqttRoot
+  .topicRoot = mqttRoot,
+  .deviceName = deviceName
 };
 
 Mqtt mqtt(mqttConfig);

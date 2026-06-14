@@ -1,10 +1,11 @@
 # ESP32 OTA Starter
-A starter template for ESP32 projects with WiFi, OTA updates, Telnet logs and mDNS preconfigured. Clone it, fill in your credentials, and start building — your firmware will be updateable over the air from the first commit.
+A starter template for ESP32 projects with WiFi, OTA updates, Telnet logs, MQTT and mDNS preconfigured. Clone it, fill in your credentials, and start building — your firmware will be updateable over the air from the first commit.
 ## What's included
 - **WiFi connection management** with static IP support and automatic reconnection
 - **OTA (over-the-air) firmware updates** via ArduinoOTA
 - **mDNS** so the device is reachable by hostname (e.g. `myproject.local`)
 - **Remote logging over WiFi** via a lightweight telnet server, so you can read logs without a USB cable (mirrors to Serial too)
+- **MQTT integration** with auto-discovery for Home Assistant — devices appear automatically, no YAML required
 - **Modular project structure** ready to extend
 - **Secrets handling** that keeps credentials out of git
 ## Project structure
@@ -26,6 +27,10 @@ src/
 │   ├── logger_config.h
 │   ├── logger.h
 │   └── logger.cpp             # Telnet log server, Serial mirror
+├── mqtt/
+│   ├── mqtt_config.h
+│   ├── mqtt.h
+│   └── mqtt.cpp               # MQTT client, state publishing, HA auto-discovery
 └── main.cpp
 ```
 ## First-time setup
@@ -48,6 +53,13 @@ Once the device is on your network, connect to it on port 23 using its IP addres
 ```
 > nc <IP> 23
 ```
+## MQTT & Home Assistant
+The device connects to your MQTT broker on startup and publishes state and discovery messages automatically. No YAML configuration is needed in Home Assistant — entities appear as soon as the device connects.
+On every connection (boot or reconnect), the device:
+1. Publishes a retained discovery payload to `homeassistant/light/<unique_id>/config` for each registered entity — HA reads this and creates the entity automatically.
+2. Publishes the current state of each entity to its state topic.
+3. Subscribes to each entity's command topic to receive `ON`/`OFF` commands from HA or any other MQTT client.
+State is kept in sync in both directions — physical interactions (button presses) publish state changes to the broker, so HA always reflects the device's actual state.
 ## Requirements
 - [PlatformIO](https://platformio.org/)
 - An ESP32 board — default target is the Seeed XIAO ESP32-C3, but any ESP32 variant works by changing `board` in `platformio.ini`

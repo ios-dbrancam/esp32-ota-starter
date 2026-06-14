@@ -37,3 +37,7 @@ const char* const hostname = "deskLightsController";
 
 // MQTT
 const char* const mqttRoot = "home/office/desk/light";
+const char* const mqttBroker = "192.168.0.123";
+const uint16_t mqttPort = 1883;
+const char* const mqttClientId = "desk-lights";
+const char* const deviceName = "Desk Lights";

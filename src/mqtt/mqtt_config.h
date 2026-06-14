@@ -9,4 +9,5 @@ struct MqttConfig {
     const char* username;
     const char* password;
     const char* topicRoot;
+    const char* deviceName;
 };
