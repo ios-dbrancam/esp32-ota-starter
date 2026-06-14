@@ -27,6 +27,10 @@ class Mqtt {
         unsigned long _lastReconnectAttempt = 0;
         static const unsigned long _reconnectInterval = 5000;
 
+        static Mqtt* _instance;
+        static void onMessage(char* topic, byte* payload, unsigned int length);
+        void handleMessage(char* topic, byte* payload, unsigned int length);
+
         bool connect();
         void publishState(uint8_t index, bool on);
 };

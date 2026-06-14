@@ -8,12 +8,14 @@ DeskLight::DeskLight(uint8_t pwmPin,
                      uint8_t downButtonPin,
                      PwmConfig pwmConfig,
                      unsigned long debounceTime,
-                     unsigned long longPressTime)
+                     unsigned long longPressTime,
+                     uint8_t defaultOnStep)
     : pwmPin_(pwmPin),
       id_(id),
       upButton_(upButtonPin, debounceTime, longPressTime),
       downButton_(downButtonPin, debounceTime, longPressTime),
       pwmConfig_(pwmConfig),
+      defaultOnStep_(defaultOnStep),
       brightnessStep_(0),
       currentPwm_(0),
       initialPwm_(0),
@@ -53,17 +55,28 @@ void DeskLight::update() {
     processFade(now);
 }
 
-void DeskLight::setBrightnessStep(int step) {
-    brightnessStep_ = min<int>(max<int>(step, 0), pwmConfig_.steps);
-    setBrightness();
-}
-
 bool DeskLight::isOn() const {
     return brightnessStep_ > 0;
 }
 
 const char* DeskLight::getId() const {
     return id_;
+}
+
+void DeskLight::setBrightnessStep(int step) {
+    brightnessStep_ = min<int>(max<int>(step, 0), pwmConfig_.steps);
+    setBrightness();
+}
+
+void DeskLight::turnOn() {
+    if (isOn()) return;
+    setBrightnessStep(defaultOnStep_);
+    logger.log("Desk light ID: " + String(id_) + " turned ON via MQTT");
+}
+
+void DeskLight::turnOff() {
+    setBrightnessStep(0);
+    logger.log("Desk light ID: " + String(id_) + " turned OFF via MQTT");
 }
 
 void DeskLight::setBrightness() {
